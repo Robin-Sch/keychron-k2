@@ -51,6 +51,9 @@
 #define LED_MATRIX_COLS MATRIX_COLS
 #define LED_MATRIX_COL_PINS MATRIX_COL_PINS
 
+/* RGB lighting off when host goes to sleep */
+#define RGBLIGHT_SLEEP
+
 /* RGB Matrix Effects */
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #define RGB_MATRIX_KEYPRESSES
