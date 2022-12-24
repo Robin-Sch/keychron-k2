@@ -22,11 +22,87 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 enum layer_names {
-    WIN_BASE = 0,
-    WIN_FN   = 1,
+    BASE = 0,
+    FN   = 1,
     MAC_BASE = 2,
-    MAC_FN   = 3,
+    MAC_FN = 4,
 };
+
+
+// Tap dance
+
+enum {
+	TD_2,
+	TD_4,
+	TD_E,
+	TD_O,
+	TD_S,
+	TD_U,
+};
+
+
+void tap_dance_2(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		send_unicode_string("²");
+	} else if (state->count == 2) {
+		send_unicode_string("½");
+	} else if (state->count >= 3) {
+		send_unicode_string("÷");
+	}
+}
+
+void tap_dance_4(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		send_unicode_string("€");
+	} else if (state->count >= 2) {
+		send_unicode_string("£");
+	}
+}
+
+void tap_dance_e(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		send_unicode_string("é");
+	} else if (state->count == 2) {
+		send_unicode_string("è");
+	} else if (state->count == 3) {
+		send_unicode_string("É");
+	} else if (state->count >= 4) {
+		send_unicode_string("È");
+	}
+}
+
+void tap_dance_o(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		send_unicode_string("ö");
+	} else if (state->count >= 2) {
+		send_unicode_string("Ö"); 
+	}
+}
+
+void tap_dance_s(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count >= 1) {
+		send_unicode_string("ß");
+	}
+}
+
+void tap_dance_u(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		send_unicode_string("ü");
+	} else if (state->count >= 2) {
+		send_unicode_string("Ü");
+	}
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+	[TD_2] = ACTION_TAP_DANCE_FN(tap_dance_2),
+	[TD_4] = ACTION_TAP_DANCE_FN(tap_dance_4),
+	[TD_E] = ACTION_TAP_DANCE_FN(tap_dance_e),
+	[TD_O] = ACTION_TAP_DANCE_FN(tap_dance_o),
+	[TD_S] = ACTION_TAP_DANCE_FN(tap_dance_s),
+	[TD_U] = ACTION_TAP_DANCE_FN(tap_dance_u),
+};
+
+#define KC_AC_E 
 #define KC_TASK LGUI(KC_TAB)        // Task viewer
 #define KC_FLXP LGUI(KC_E)          // Windows file explorer
 
@@ -53,37 +129,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     * LCTL  * LGUI  * LALT  * SPC                                         * RALT * FN   * RCTL * LEFT * DOWN * RGHT *
     *****************************************************************************************************************
   */
-  [WIN_BASE] = LAYOUT_75_ansi(
+  [BASE] = LAYOUT_75_ansi(
   /*  0           1           2           3           4           5           6           7           8           9           10          11          12          13          14          15       */
       KC_ESC,     KC_F1,      KC_F2,      KC_F3,      KC_F4,      KC_F5,      KC_F6,      KC_F7,      KC_F8,      KC_F9,      KC_F10,     KC_F11,     KC_F12,     KC_PGUP,    KC_PSCR,    RGB_MOD  ,
       KC_GRV,     KC_1,       KC_2,       KC_3,       KC_4,       KC_5,       KC_6,       KC_7,       KC_8,       KC_9,       KC_0,       KC_MINS,    KC_EQL,     KC_BSPC,                KC_DEL   ,
       KC_TAB,     KC_Q,       KC_W,       KC_E,       KC_R,       KC_T,       KC_Y,       KC_U,       KC_I,       KC_O,       KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,                KC_PGDN  ,
       KC_CAPS,    KC_A,       KC_S,       KC_D,       KC_F,       KC_G,       KC_H,       KC_J,       KC_K,       KC_L,       KC_SCLN,    KC_QUOT,                KC_ENT,                 KC_END   ,
       KC_LSFT,                KC_Z,       KC_X,       KC_C,       KC_V,       KC_B,       KC_N,       KC_M,       KC_COMM,    KC_DOT,     KC_SLSH,                KC_RSFT,    KC_UP,      KC_HOME  ,
-      KC_LCTL,    KC_LGUI,    KC_LALT,                                        KC_SPC,                                         KC_RALT,    MO(WIN_FN), KC_RCTL,    KC_LEFT,    KC_DOWN,    KC_RGHT
+      KC_LCTL,    KC_LGUI,    KC_LALT,                                        KC_SPC,                                         KC_RALT,    MO(FN),     KC_RCTL,    KC_LEFT,    KC_DOWN,    KC_RGHT
   ),
 
   /*
     *****************************************************************************************************************
     *RESET * BRID * BRIU * TASK * FLXP * RVAD * RVAI * MPRV * MPLY * MNXT * MUTE * VOLD * VOLU *      *  INS * RTOG *
     *****************************************************************************************************************
-    *      * RSPI * RSPD *      *      *      *      *      *      *      *      *      *      *             *      *
+    *      *      * TD_2 *      * TD_4 *      *      *      *      *      *      * RSPD * RSPI *             *      *
     *****************************************************************************************************************
-    *         *      *      *      *      *      *      *      *      *      *      *      *      *          *      *
+    *         *      *      * TD_E *      *      *      * TD_U *      * TD_O *      *      *      *          *      *
     *****************************************************************************************************************
-    *           *      *      *      *      *      *      *      *      *      *      *      *               *      *
+    *           *      * TD_S *      *      *      *      *      *      *      *      *      *               *      *
     *****************************************************************************************************************
     *              *      *      *      *      *      *      *      *      *      *      *            * RSAI *      *
     *****************************************************************************************************************
     *       *       *       *                                             *      *      *      * RHUD * RSAD * RHUI *
     *****************************************************************************************************************
   */
-  [WIN_FN] = LAYOUT_75_ansi(
+  [FN] = LAYOUT_75_ansi(
   /*  0           1           2           3           4           5           6           7           8           9           10          11          12          13          14          15       */
       RESET,      KC_BRID,    KC_BRIU,    KC_TASK,    KC_FLXP,    RGB_VAD,    RGB_VAI,    KC_MPRV,    KC_MPLY,    KC_MNXT,    KC_MUTE,    KC_VOLD,    KC_VOLU,    _______,    KC_INS,     RGB_TOG  ,
-      _______,    RGB_SPI,    RGB_SPD,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______  ,
-      _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______  ,
-      _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______,                _______  ,
+      _______,    _______,    TD(TD_2),   _______,    TD(TD_4),   _______,    _______,    _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SPI,    _______,                _______  ,
+      _______,    _______,    _______,    TD(TD_E),   _______,    _______,    _______,    TD(TD_U),   _______,    TD(TD_O),   _______,    _______,    _______,    _______,                _______  ,
+      _______,    _______,    TD(TD_S),   _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______,                _______  ,
       _______,                _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______,    RGB_SAI,    _______  ,
       _______,    _______,    _______,                                        _______,                                        _______,    _______,    _______,    RGB_HUD,    RGB_SAD,    RGB_HUI
   ),
@@ -117,11 +193,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     *****************************************************************************************************************
     *RESET * BRID * BRIU * TASK * FLXP * RVAD * RVAI * MPRV * MPLY * MNXT * MUTE * VOLD * VOLU *      *  INS * RTOG *
     *****************************************************************************************************************
-    *      *      *      *      *      *      *      *      *      *      *      *      *      *             *      *
+    *      *      * TD_2 *      * TD_3 *      *      *      *      *      *      * RSPD * RSPI *             *      *
     *****************************************************************************************************************
-    *         *      *      *      *      *      *      *      *      *      *      *      *      *          *      *
+    *         *      *      * TD_E *      *      *      * TD_U *      * TD_O *      *      *      *          *      *
     *****************************************************************************************************************
-    *           *      *      *      *      *      *      *      *      *      *      *      *               *      *
+    *           *      * TD_S *      *      *      *      *      *      *      *      *      *               *      *
     *****************************************************************************************************************
     *              *      *      *      *      *      *      *      *      *      *      *            * RSAI *      *
     *****************************************************************************************************************
@@ -131,9 +207,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [MAC_FN] = LAYOUT_75_ansi(
   /*  0           1           2           3           4           5           6           7           8           9           10          11          12          13          14          15       */
       RESET,      KC_BRID,    KC_BRIU,    KC_MSSN,    KC_FIND,    RGB_VAD,    RGB_VAI,    KC_MPRV,    KC_MPLY,    KC_MNXT,    KC_MUTE,    KC_VOLD,    KC_VOLU,    KC_MSNP,    KC_INS,     RGB_TOG  ,
-      _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______  ,
-      _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______  ,
-      _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______,                _______  ,
+      _______,    _______,    TD(TD_2),   _______,    TD(TD_4),   _______,    _______,    _______,    _______,    _______,    _______,    RGB_SPD,    RGB_SPI,    _______,                _______  ,
+      _______,    _______,    _______,    TD(TD_E),   _______,    _______,    _______,    TD(TD_U),   _______,    TD(TD_O),   _______,    _______,    _______,    _______,                _______  ,
+      _______,    _______,    TD(TD_S),   _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______,                _______  ,
       _______,                _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,                _______,    RGB_SAI,    _______  ,
       _______,    _______,    _______,                                        _______,                                        _______,    _______,    _______,    RGB_HUD,    RGB_SAD,    RGB_HUI
   )
@@ -146,7 +222,7 @@ bool dip_switch_update_user(uint8_t index, bool active) {
         layer_move(MAC_BASE);
       }
       else { // Windows/Android mode
-        layer_move(WIN_BASE);
+        layer_move(BASE);
       }
       break;
     case 1: // Connection switch
@@ -161,6 +237,37 @@ bool dip_switch_update_user(uint8_t index, bool active) {
   }
   return true;
 }
+
+
+/*
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	switch(keycode) {
+	case TST_1:
+		if (record->event.pressed) {
+			send_unicode_string("é");
+		}
+		break;
+	case TST_2:
+		if (record->event.pressed) {
+			SEND_STRING("test");
+		}
+		break;
+	case TST_3:
+		if (record->event.pressed) {
+			SEND_STRING("é");
+		}
+		break;
+
+	case TST_4:
+		if (record->event.pressed) {
+			SEND_STRING("a b é c d");
+		}
+		break;
+	}
+
+	return true;
+}
+*/
 
 void keyboard_post_init_user(void) {
   // Customise these values to desired behaviour

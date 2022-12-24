@@ -16,5 +16,7 @@
 
 #pragma once
 
+#define UNICODE_SELECTED_MODES UC_LNX
+#define TAPPING_TERM 200
 /* Enable RGB Matrix */
 #define VIA_QMK_RGBLIGHT_ENABLE
