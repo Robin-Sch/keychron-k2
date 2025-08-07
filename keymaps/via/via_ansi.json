@@ -52,10 +52,6 @@
       [
         "SOLID_REACTIVE_MULTICROSS",
         1
-      ],
-      [
-        "CUSTOM_EFFECT_IMPLS",
-        1
       ]
     ],
     "supportedLightingValues": [
