@@ -1,6 +1,4 @@
-/* Copyright 2022 Philip Mourdjis <philip.j.m@gmail.com>
- * Copyright 2023 KeijoMika (https://github.com/KeijoMika)
- * Copyright 2023 Santanu Paik (https://github.com/ITNerd69)
+/* Copyright 2023 KeijoMika (https://github.com/KeijoMika)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +14,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-#define SN32F2XX_RGB_MATRIX_ROW_PINS { C3, C1, C0, C6, C5, C4, C9, C8, C7, C12, C11, C10, B13, C14, C13, B14, B15, D3 }
-#define DIP_SWITCH_PINS { D4, D5 }
-
-// START TAP DANCE
-#define TAPPING_TERM 200
-#define UNICODE_SELECTED_MODES UNICODE_MODE_LINUX
-// END TAP DANCE
+#define RGB_MATRIX_LED_COUNT 85
