@@ -120,6 +120,8 @@ tap_dance_action_t tap_dance_actions[] = {
 #define HM_SCLN RGUI_T(KC_SCLN)  // ; acts as GUI (Cmd/Win) when held
 
 uint8_t saved_rgb_mode = 0;
+bool is_homerow_mod_active = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case HM_A: case HM_S: case HM_D: case HM_F:
@@ -128,8 +130,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_homerow_mods) {
           saved_rgb_mode = rgb_matrix_get_mode();
           rgb_matrix_mode_noeeprom(RGB_MATRIX_CUSTOM_homerow_mods); // Set mods to be colored
+          is_homerow_mod_active = true;
         }
-      } else if (!record->event.pressed) {
+      } else if (!record->event.pressed && is_homerow_mod_active) {
+        is_homerow_mod_active = false;
         rgb_matrix_mode_noeeprom(saved_rgb_mode);  // Reset mode
       }
       break;
