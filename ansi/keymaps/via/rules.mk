@@ -7,5 +7,5 @@ UNICODE_ENABLE = yes
 
 # START HOME ROW MODS
 RGB_MATRIX_ENABLE = yes
-RGB_MATRIX_CUSTOM_USER = yes
+RGB_MATRIX_CUSTOM_USER = yes # also needed for custom heatmap
 # END HOME ROW MODS

@@ -121,8 +121,23 @@ tap_dance_action_t tap_dance_actions[] = {
 
 uint8_t saved_rgb_mode = 0;
 bool is_homerow_mod_active = false;
+// END HOME ROW MODS
+
+// Forward declaration (for quantum/rgb_matrix/animations/typing_heatmap_anim.h)
+void process_rgb_matrix_typing_heatmap(uint8_t row, uint8_t col);
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  // START CUSTOM HEATMAP
+  // Whenever we are in TYPING_HEATMAP calling this function is handled by qmk
+  //   but when we are in TYPING_HEATMAP_CUSTOM we also want same functionality
+  #if defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
+  if (rgb_matrix_get_mode() == RGB_MATRIX_CUSTOM_typing_heatmap_custom) {
+    process_rgb_matrix_typing_heatmap(record->event.key.row, record->event.key.col);
+  }
+  #endif // defined(RGB_MATRIX_FRAMEBUFFER_EFFECTS) && defined(ENABLE_RGB_MATRIX_TYPING_HEATMAP)
+  // END CUSTOM HEATMAP
+
+  // START HOME ROW MODS
   switch (keycode) {
     case HM_A: case HM_S: case HM_D: case HM_F:
     case HM_J: case HM_K: case HM_L: case HM_SCLN:
@@ -138,9 +153,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
   }
+  // END HOME ROW MODS
+
   return true;
 }
-// END HOME ROW MODS
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
